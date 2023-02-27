@@ -1,0 +1,27 @@
+name: Reusable workflow example
+
+on:
+  workflow_call:
+    inputs:
+      WPE_ENV:
+        required: true
+        type: string
+      REMOTE_PATH:
+        required: true
+        type: string
+    secrets:
+      WPE_SSHG_KEY_PRIVATE:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: GitHub Action Deploy to WP Engine
+        uses: wpengine/github-action-wpe-site-deploy@v3
+        with:
+          WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
+          WPE_ENV: ${{ inputs.WPE_ENV }}
+          REMOTE_PATH: ${{ inputs.REMOTE_PATH }}
+          CACHE_CLEAR: TRUE
